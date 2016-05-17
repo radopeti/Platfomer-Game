@@ -1,0 +1,48 @@
+
+megaman.png
+size: 128,64
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+running-0
+  rotate: false
+  xy: 29, 28
+  size: 19, 28
+  orig: 19, 28
+  offset: 0, 0
+  index: -1
+running-1
+  rotate: false
+  xy: 70, 27
+  size: 17, 29
+  orig: 17, 29
+  offset: 0, 0
+  index: -1
+running-2
+  rotate: false
+  xy: 2, 2
+  size: 22, 26
+  orig: 22, 26
+  offset: 0, 0
+  index: -1
+running-3
+  rotate: false
+  xy: 50, 28
+  size: 18, 28
+  orig: 18, 28
+  offset: 0, 0
+  index: -1
+running-4
+  rotate: false
+  xy: 89, 27
+  size: 17, 29
+  orig: 17, 29
+  offset: 0, 0
+  index: -1
+running-5
+  rotate: false
+  xy: 2, 30
+  size: 25, 26
+  orig: 25, 26
+  offset: 0, 0
+  index: -1

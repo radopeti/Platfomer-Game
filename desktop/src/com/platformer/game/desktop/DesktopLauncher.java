@@ -1,4 +1,5 @@
 package com.platformer.game.desktop;
+import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
