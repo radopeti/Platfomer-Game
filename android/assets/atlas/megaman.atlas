@@ -6,43 +6,64 @@ filter: Nearest,Nearest
 repeat: none
 running-0
   rotate: false
-  xy: 29, 28
+  xy: 75, 34
   size: 19, 28
   orig: 19, 28
   offset: 0, 0
   index: -1
 running-1
   rotate: false
-  xy: 70, 27
+  xy: 48, 2
   size: 17, 29
   orig: 17, 29
   offset: 0, 0
   index: -1
 running-2
   rotate: false
-  xy: 2, 2
+  xy: 29, 36
   size: 22, 26
   orig: 22, 26
   offset: 0, 0
   index: -1
 running-3
   rotate: false
-  xy: 50, 28
+  xy: 96, 34
   size: 18, 28
   orig: 18, 28
   offset: 0, 0
   index: -1
 running-4
   rotate: false
-  xy: 89, 27
+  xy: 67, 2
   size: 17, 29
   orig: 17, 29
   offset: 0, 0
   index: -1
 running-5
   rotate: false
-  xy: 2, 30
+  xy: 2, 36
   size: 25, 26
   orig: 25, 26
+  offset: 0, 0
+  index: -1
+standing-0
+  rotate: false
+  xy: 2, 5
+  size: 21, 29
+  orig: 21, 29
+  offset: 0, 0
+  index: -1
+standing-1
+  rotate: false
+  xy: 25, 5
+  size: 21, 29
+  orig: 21, 29
+  offset: 0, 0
+  index: -1
+standing-2
+  rotate: false
+  xy: 53, 33
+  size: 20, 29
+  orig: 20, 29
   offset: 0, 0
   index: -1
