@@ -11,7 +11,7 @@ public class Constants {
     public static final Color BACKGROUND_COLOR = Color.SKY;
 
     public static final String MEGAMAN_ATLAS = "atlas/megaman.atlas";
-    public static final float MEGAMAN_WALK_ANIMATION_FRAME_TIME = 0.25f;
+    public static final float MEGAMAN_WALK_ANIMATION_FRAME_TIME = 0.1f;
     public static final float MEGAMAN_STANDING_ANIMATION_FRAME_TIME = 0.25f;
     public static final float MEGAMAN_MOVEMENT_SPEED = 150;
 }

@@ -60,7 +60,7 @@ public class GameScreen extends ScreenAdapter{
 
         batch.setProjectionMatrix(camera.combined);
 
-        megaMan.update();
+        megaMan.update(delta);
 
         batch.begin();
 
