@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
-import com.sun.media.jfxmediaimpl.MediaDisposer;
 
 import static com.platformer.game.utils.Constants.*;
 
@@ -25,11 +24,12 @@ public class Assets implements Disposable, AssetErrorListener{
     public MegaManAssets megaManAssets;
 
     private AssetManager assetManager;
+    
     private Assets(){
     }
 
     public void init(AssetManager assetManager){
-        this.assetManager = new AssetManager();
+        this.assetManager = assetManager;
         assetManager.load(MEGAMAN_ATLAS, TextureAtlas.class);
         assetManager.finishLoading();
         TextureAtlas megaManAtlas = assetManager.get(MEGAMAN_ATLAS);
@@ -47,6 +47,9 @@ public class Assets implements Disposable, AssetErrorListener{
     }
 
     public class MegaManAssets{
+        public final TextureRegion jumpingRegion;
+        public final TextureRegion fallingRegion;
+
         public final Array<TextureRegion> runningFrames;
         public final Animation runAnimation;
         public final Array<TextureRegion> staindingFrames;
@@ -54,6 +57,9 @@ public class Assets implements Disposable, AssetErrorListener{
 
 
         public MegaManAssets(TextureAtlas atlas){
+            jumpingRegion = atlas.findRegion("jumping");
+            fallingRegion = atlas.findRegion("falling");
+
             runningFrames = new Array<TextureRegion>();
             runningFrames.add(atlas.findRegion("running-0"));
             runningFrames.add(atlas.findRegion("running-1"));

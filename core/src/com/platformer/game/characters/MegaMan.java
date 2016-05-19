@@ -5,8 +5,11 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.platformer.game.utils.Assets;
+import com.platformer.game.utils.Enums.*;
 
 import static com.platformer.game.utils.Constants.*;
 
@@ -16,23 +19,6 @@ import static com.platformer.game.utils.Constants.*;
  * He can walk, jump, climb on the map and eliminate
  * enemies by shooting on them.
  */
-
-
-enum WalkingState{
-    STANDING,
-    RUNNING
-}
-
-enum Direction{
-    LEFT,
-    RIGHT
-}
-
-enum JumpState{
-    JUMPING,
-    FALLING,
-    GROUNDED
-}
 
 public class MegaMan {
 
@@ -48,6 +34,9 @@ public class MegaMan {
     private WalkingState walkingState;
     private Direction direction;
     private JumpState jumpState;
+
+    private float jumpStartTime;
+    private float jumpTime;
 
     /**
      * Default constructor
@@ -81,6 +70,7 @@ public class MegaMan {
             position.y = 0;
             velocity.y = 0;
             jumpState = JumpState.GROUNDED;
+            jumpTime = 0;
         }
 
         //move controls
@@ -93,28 +83,14 @@ public class MegaMan {
             walkingState = WalkingState.STANDING;
         }
 
+
         if (Gdx.input.isKeyPressed(Keys.X)){
-            if (isJumpState(JumpState.GROUNDED)){
-                Gdx.app.log(TAG, "jump state 1: " + jumpState);
-                jumpState = JumpState.JUMPING;
-            }else if (isJumpState(JumpState.JUMPING)){
-                Gdx.app.log(TAG, "jump state 2: " + position.y);
-                if (position.y < MEGAMAN_JUMP_HEIGHT){
-                    Gdx.app.log(TAG, "still jumping " + jumpState);
-                }else{
-                    Gdx.app.log(TAG, "falling cause hit the max height " + jumpState);
-                    velocity.y = 0;
-                    jumpState = JumpState.FALLING;
-                }
-            }
-        }else{
-            if (lastPosition.y > position.y && !isJumpState(JumpState.GROUNDED)){
-                Gdx.app.log(TAG, "falling by released jump button: " + jumpState);
-                jumpState = JumpState.FALLING;
-            }
+            jump();
+        }else if (lastPosition.y > position.y && !isJumpState(JumpState.GROUNDED)){
+            jumpState = JumpState.FALLING;
         }
 
-
+        Gdx.app.log(TAG, "jump state " +  jumpTime + " " + jumpState);
         lastPosition.set(position);
         position.mulAdd(velocity, delta);
     }
@@ -125,7 +101,6 @@ public class MegaMan {
      * @param batch SpriteBatch
      */
     public void render(SpriteBatch batch){
-
 
         if (isWalkingState(WalkingState.STANDING)){
             stateTime += Gdx.graphics.getDeltaTime();
@@ -218,6 +193,26 @@ public class MegaMan {
         walkingState = WalkingState.RUNNING;
         direction = Direction.RIGHT;
         flipX = true;
+    }
+
+    /**
+     * Increase MegaMan's vertical velocity until a defined time
+     * MegaMan can start to jump only if his state is grounded.
+     */
+    private void jump(){
+        if (isJumpState(JumpState.GROUNDED)){
+            jumpState = JumpState.JUMPING;
+            velocity.y += MEGAMAN_JUMP_SPEED;
+            jumpStartTime = TimeUtils.nanoTime();
+        }else if (isJumpState(JumpState.JUMPING)){
+            //calculate the current jumptime
+            jumpTime = (TimeUtils.nanoTime() - jumpStartTime) * MathUtils.nanoToSec;
+            if (jumpTime < MEGAMAN_JUMP_TIME){
+                velocity.y += MEGAMAN_JUMP_SPEED;
+            }else{
+                jumpState = JumpState.FALLING;
+            }
+        }
     }
 
 }

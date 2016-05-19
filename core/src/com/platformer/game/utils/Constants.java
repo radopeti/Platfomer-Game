@@ -14,7 +14,8 @@ public class Constants {
     public static final String MEGAMAN_ATLAS = "atlas/megaman.atlas";
     public static final float MEGAMAN_WALK_ANIMATION_FRAME_TIME = 0.1f;
     public static final float MEGAMAN_STANDING_ANIMATION_FRAME_TIME = 0.25f;
-    public static final float MEGAMAN_MOVEMENT_SPEED = 150;
-    public static final float MEGAMAN_JUMP_SPEED = 30;
-    public static final float MEGAMAN_JUMP_HEIGHT = 55;
+    public static final float MEGAMAN_MOVEMENT_SPEED = 150f;
+    public static final float MEGAMAN_JUMP_SPEED = 30f;
+    public static final float MEGAMAN_JUMP_TIME = 0.15f;
+    public static final float MEGAMAN_HEIGHT = Assets.instance.megaManAssets.jumpingRegion.getRegionHeight();
 }

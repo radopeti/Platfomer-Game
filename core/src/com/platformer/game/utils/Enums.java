@@ -5,4 +5,19 @@ package com.platformer.game.utils;
  * Enums
  */
 public class Enums {
+    public enum WalkingState{
+        STANDING,
+        RUNNING
+    }
+
+    public enum Direction{
+        LEFT,
+        RIGHT
+    }
+
+    public enum JumpState{
+        JUMPING,
+        FALLING,
+        GROUNDED
+    }
 }

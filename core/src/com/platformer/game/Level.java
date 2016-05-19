@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.platformer.game.characters.MegaMan;
 
+import static com.platformer.game.utils.Constants.*;
+
 /**
  * Created by radopeti on 2016. 05. 17..
  * This class renders the map, characters
@@ -27,7 +29,6 @@ public class Level {
 
     public void debugRender(ShapeRenderer renderer) {
         if (debugOn) {
-
         }
     }
 
