@@ -42,10 +42,10 @@ public class GameScreen extends ScreenAdapter{
         camera = new OrthographicCamera();
         viewport = new ExtendViewport(WORLD_SIZE, WORLD_SIZE, camera);
 
-        AssetManager assetManager = new AssetManager();
-        Assets.instance.init(assetManager);
+        Assets.instance.init(new AssetManager());
 
-        megaMan = new MegaMan(20, 20);
+        level = new Level();
+        level.setDebugOn(true);
     }
 
     @Override
@@ -60,11 +60,14 @@ public class GameScreen extends ScreenAdapter{
 
         batch.setProjectionMatrix(camera.combined);
 
-        megaMan.update(delta);
+        level.update(delta);
+
+        renderer.begin(ShapeRenderer.ShapeType.Line);
+            level.debugRender(renderer);
+        renderer.end();
 
         batch.begin();
-
-        megaMan.render(batch);
+            level.render(batch);
         batch.end();
     }
 

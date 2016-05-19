@@ -18,7 +18,7 @@ import static com.platformer.game.utils.Constants.*;
  */
 
 
-enum MotionState{
+enum WalkingState{
     STANDING,
     RUNNING
 }
@@ -28,23 +28,38 @@ enum Direction{
     RIGHT
 }
 
+enum JumpState{
+    JUMPING,
+    FALLING,
+    GROUNDED
+}
+
 public class MegaMan {
+
+    private static final String TAG = MegaMan.class.getName();
 
     private TextureRegion currentRegion;
     private float stateTime;
     private boolean flipX;
     private Vector2 position;
+    private Vector2 lastPosition;
     private Vector2 velocity;
 
-    private MotionState motionState;
+    private WalkingState walkingState;
     private Direction direction;
+    private JumpState jumpState;
 
+    /**
+     * Default constructor
+     */
     public MegaMan(){
         this.position = new Vector2();
+        this.lastPosition = new Vector2();
         this.velocity = new Vector2();
         this.velocity = Vector2.Zero;
-        motionState = MotionState.STANDING;
+        walkingState = WalkingState.STANDING;
         direction = Direction.RIGHT;
+        jumpState = JumpState.FALLING;
         flipX = true;
     }
 
@@ -59,26 +74,70 @@ public class MegaMan {
     }
 
     public void update(float delta){
+
+        velocity.y -= GRAVITY;
+
+        if (position.y <= 0){
+            position.y = 0;
+            velocity.y = 0;
+            jumpState = JumpState.GROUNDED;
+        }
+
+        //move controls
         if (Gdx.input.isKeyPressed(Keys.RIGHT)){
             moveRight(delta);
         }else if (Gdx.input.isKeyPressed(Keys.LEFT)){
             moveLeft(delta);
         }else{
             velocity.x = 0;
-            motionState = MotionState.STANDING;
+            walkingState = WalkingState.STANDING;
         }
 
+        if (Gdx.input.isKeyPressed(Keys.X)){
+            if (isJumpState(JumpState.GROUNDED)){
+                Gdx.app.log(TAG, "jump state 1: " + jumpState);
+                jumpState = JumpState.JUMPING;
+            }else if (isJumpState(JumpState.JUMPING)){
+                Gdx.app.log(TAG, "jump state 2: " + position.y);
+                if (position.y < MEGAMAN_JUMP_HEIGHT){
+                    Gdx.app.log(TAG, "still jumping " + jumpState);
+                }else{
+                    Gdx.app.log(TAG, "falling cause hit the max height " + jumpState);
+                    velocity.y = 0;
+                    jumpState = JumpState.FALLING;
+                }
+            }
+        }else{
+            if (lastPosition.y > position.y && !isJumpState(JumpState.GROUNDED)){
+                Gdx.app.log(TAG, "falling by released jump button: " + jumpState);
+                jumpState = JumpState.FALLING;
+            }
+        }
+
+
+        lastPosition.set(position);
         position.mulAdd(velocity, delta);
     }
 
+
+    /**
+     * Draw the current TextureRegion depend on the current state of MegaMan
+     * @param batch SpriteBatch
+     */
     public void render(SpriteBatch batch){
 
 
-        if (isMotionState(MotionState.STANDING)){
+        if (isWalkingState(WalkingState.STANDING)){
             stateTime += Gdx.graphics.getDeltaTime();
             currentRegion = Assets.instance.megaManAssets.standingAnimation.getKeyFrame(stateTime);
-        }else if (isMotionState(MotionState.RUNNING)){
+        }else if (isWalkingState(WalkingState.RUNNING)){
             currentRegion = Assets.instance.megaManAssets.runAnimation.getKeyFrame(stateTime);
+        }
+
+        if (isJumpState(JumpState.JUMPING)){
+            currentRegion = Assets.instance.megaManAssets.jumpingRegion;
+        }else if (isJumpState(JumpState.FALLING)){
+            currentRegion = Assets.instance.megaManAssets.fallingRegion;
         }
 
         batch.draw(currentRegion.getTexture(),
@@ -103,33 +162,60 @@ public class MegaMan {
 
     }
 
-    public boolean isMotionState(MotionState motionState){
-        if (this.motionState.equals(motionState)) return true;
+    /**
+     * Helper method instead of using walkingState == WalkingState.STATE
+     * @param walkingState enum WalkingState
+     * @return true if current walkingState equals the param walkingState
+     */
+    public boolean isWalkingState(WalkingState walkingState){
+        if (this.walkingState.equals(walkingState)) return true;
         return false;
     }
 
+    /**
+     * Helper method instead of using direction == Direction.DIRECTION
+     * @param direction enum Direction
+     * @return true if current direction equals the param direction
+     */
     public boolean isDirection(Direction direction){
         if (this.direction.equals(direction)) return true;
         return false;
     }
 
-    private void init(){
-        this.velocity = Vector2.Zero;
-        motionState = MotionState.STANDING;
+    /**
+     * Helper method instead of using jumpState == JumpState.JUMPSTATE
+     * @param jumpState enum JumpState
+     * @return true if current jumpState equals the param jumpState
+     */
+    public boolean isJumpState(JumpState jumpState){
+        if (this.jumpState.equals(jumpState)) return true;
+        return false;
     }
 
+    /**
+     * @param delta delta time
+     * Move MegaMan to the left direction
+     * stateTime is for the animation
+     * velocity is the speed of the movement
+     * walkState is changing to RUNNING while MegaMan is moving
+     * flipX is flipping the animation on the x axis, it depends on the direction
+     */
     private void moveLeft(float delta){
         stateTime += delta;
         velocity.x = -MEGAMAN_MOVEMENT_SPEED;
-        motionState = MotionState.RUNNING;
+        walkingState = WalkingState.RUNNING;
         direction = Direction.LEFT;
         flipX = false;
     }
 
+    /**
+     * @param delta delta time
+     * The logic is same as moveLeft(float delta) above
+     */
     private void moveRight(float delta){
         stateTime += delta;
         velocity.x = MEGAMAN_MOVEMENT_SPEED;
-        motionState = MotionState.RUNNING;
+        walkingState = WalkingState.RUNNING;
         direction = Direction.RIGHT;
         flipX = true;
     }
