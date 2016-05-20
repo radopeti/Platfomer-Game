@@ -33,8 +33,6 @@ public class GameScreen extends ScreenAdapter{
 
     private Level level;
 
-    private MegaMan megaMan;
-
     @Override
     public void show() {
         batch = new SpriteBatch();
@@ -46,6 +44,7 @@ public class GameScreen extends ScreenAdapter{
 
         level = new Level();
         level.setDebugOn(true);
+        level.initPlatforms();
     }
 
     @Override

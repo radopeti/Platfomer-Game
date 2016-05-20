@@ -6,8 +6,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.platformer.game.mapcomponents.Platform;
 import com.platformer.game.utils.Assets;
 import com.platformer.game.utils.Enums.*;
 
@@ -25,6 +28,7 @@ public class MegaMan {
     private static final String TAG = MegaMan.class.getName();
 
     private TextureRegion currentRegion;
+    private Rectangle hitBox;
     private float stateTime;
     private boolean flipX;
     private Vector2 position;
@@ -46,6 +50,7 @@ public class MegaMan {
         this.lastPosition = new Vector2();
         this.velocity = new Vector2();
         this.velocity = Vector2.Zero;
+        this.hitBox = new Rectangle();
         walkingState = WalkingState.STANDING;
         direction = Direction.RIGHT;
         jumpState = JumpState.FALLING;
@@ -55,6 +60,7 @@ public class MegaMan {
     public MegaMan(float x, float y){
         this();
         this.position.set(x, y);
+        this.hitBox.set(position.x, position.y, MEGAMAN_WIDTH, MEGAMAN_HEIGHT);
     }
 
     public MegaMan(Vector2 position){
@@ -62,7 +68,7 @@ public class MegaMan {
         this.position.set(position);
     }
 
-    public void update(float delta){
+    public void update(float delta, Array<Platform> platforms){
 
         velocity.y -= GRAVITY;
 
@@ -73,7 +79,7 @@ public class MegaMan {
             jumpTime = 0;
         }
 
-        //move controls
+        //move key controls
         if (Gdx.input.isKeyPressed(Keys.RIGHT)){
             moveRight(delta);
         }else if (Gdx.input.isKeyPressed(Keys.LEFT)){
@@ -83,16 +89,19 @@ public class MegaMan {
             walkingState = WalkingState.STANDING;
         }
 
-
+        //jump key control
         if (Gdx.input.isKeyPressed(Keys.X)){
             jump();
         }else if (lastPosition.y > position.y && !isJumpState(JumpState.GROUNDED)){
             jumpState = JumpState.FALLING;
         }
 
-        Gdx.app.log(TAG, "jump state " +  jumpTime + " " + jumpState);
+        //platform collision detection
+
+        Gdx.app.log(TAG, "jumpstate " + jumpState);
         lastPosition.set(position);
         position.mulAdd(velocity, delta);
+        updateHitBox();
     }
 
 
@@ -134,7 +143,7 @@ public class MegaMan {
     }
 
     public void debugRenderer(ShapeRenderer renderer){
-
+        renderer.rect(hitBox.x, hitBox.y, hitBox.width, hitBox.height);
     }
 
     /**
@@ -165,6 +174,10 @@ public class MegaMan {
     public boolean isJumpState(JumpState jumpState){
         if (this.jumpState.equals(jumpState)) return true;
         return false;
+    }
+
+    private void updateHitBox(){
+        hitBox.setPosition(position.x, position.y);
     }
 
     /**
@@ -209,8 +222,6 @@ public class MegaMan {
             jumpTime = (TimeUtils.nanoTime() - jumpStartTime) * MathUtils.nanoToSec;
             if (jumpTime < MEGAMAN_JUMP_TIME){
                 velocity.y += MEGAMAN_JUMP_SPEED;
-            }else{
-                jumpState = JumpState.FALLING;
             }
         }
     }
