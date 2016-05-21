@@ -1,5 +1,6 @@
 package com.platformer.game.mapcomponents;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 
@@ -13,9 +14,11 @@ public class Platform {
     private float right;
     private float top;
     private float bottom;
+    private Color color;
 
     public Platform() {
         rectangle = new Rectangle();
+        color = Color.BLACK;
     }
 
     public Platform(float x, float y, float width, float height) {
@@ -43,11 +46,22 @@ public class Platform {
         return bottom;
     }
 
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
     public Rectangle getRectangle() {
         return rectangle;
     }
 
     public void render(ShapeRenderer renderer) {
+        renderer.setColor(color);
         renderer.rect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+    }
+
+    @Override
+    public String toString(){
+        return "[x=" + rectangle.x + ", y=" + rectangle.y + ", width=" + rectangle.width +
+                ", height=" + rectangle.height + "]";
     }
 }

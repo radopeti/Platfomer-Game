@@ -32,14 +32,9 @@ public class Level {
 
     public void debugRender(ShapeRenderer renderer) {
         if (debugOn) {
-            renderer.end();
-            renderer.begin(ShapeRenderer.ShapeType.Filled);
-            renderer.setColor(Color.BLACK);
             for (Platform platform : platforms) {
                 platform.render(renderer);
             }
-            renderer.end();
-            renderer.begin(ShapeRenderer.ShapeType.Line);
             renderer.setColor(Color.WHITE);
             megaMan.debugRenderer(renderer);
         }
@@ -50,9 +45,15 @@ public class Level {
     }
 
     public void initPlatforms() {
-        platforms.add(new Platform(60, 10, 30, 10));
-        platforms.add(new Platform(100, 20, 30, 10));
-        platforms.add(new Platform(140, 30, 50, 10));
+        platforms.add(new Platform(10, 60, 20, 150));
+        platforms.add(new Platform(40, 10, 150, 15));
+        platforms.add(new Platform(60, 80, 80, 15));
+        platforms.add(new Platform(100, 120, 50, 15));
+        platforms.add(new Platform(160, 40, 30, 15));
+        platforms.add(new Platform(190, 25, 20, 60));
+        platforms.add(new Platform(220, 25, 30, 10));
+        platforms.add(new Platform(240, 40, 20, 150));
+
     }
 
     public void initPlatforms(Array<Platform> platforms) {
