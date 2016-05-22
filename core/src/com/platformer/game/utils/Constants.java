@@ -11,6 +11,8 @@ public class Constants {
     public static final float GRAVITY = 10;
     public static final Color BACKGROUND_COLOR = Color.FOREST;
 
+    public static final String TESTMAP_NAME = "maps/testmap.tmx";
+
     public static final String MEGAMAN_ATLAS = "atlas/megaman.atlas";
     public static final float MEGAMAN_WALK_ANIMATION_FRAME_TIME = 0.1f;
     public static final float MEGAMAN_STANDING_ANIMATION_FRAME_TIME = 0.25f;

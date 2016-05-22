@@ -3,6 +3,7 @@ package com.platformer.game;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.platformer.game.characters.MegaMan;
 import com.platformer.game.mapcomponents.Platform;
@@ -44,7 +45,7 @@ public class Level {
         this.debugOn = debugOn;
     }
 
-    public void initPlatforms() {
+    public void initTestPlatforms() {
         platforms.add(new Platform(10, 60, 20, 150));
         platforms.add(new Platform(40, 10, 150, 15));
         platforms.add(new Platform(60, 80, 80, 15));
@@ -56,7 +57,11 @@ public class Level {
 
     }
 
-    public void initPlatforms(Array<Platform> platforms) {
-
+    public void createPlatforms(Array<Rectangle> rectangles) {
+        for (Rectangle rectangle : rectangles){
+            Platform platform = new Platform(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+            platforms.add(platform);
+        }
     }
+
 }
