@@ -38,7 +38,6 @@ public class MegaMan {
 
     private TextureRegion currentRegion;
     private Rectangle hitBox;
-    Rectangle nextFrame;
     private float stateTime;
     private boolean flipX;
     private Vector2 position;
@@ -61,7 +60,6 @@ public class MegaMan {
         this.velocity = new Vector2();
         this.velocity = Vector2.Zero;
         this.hitBox = new Rectangle();
-        nextFrame = new Rectangle();
         walkingState = WalkingState.STANDING;
         direction = Direction.RIGHT;
         jumpState = JumpState.FALLING;
@@ -111,45 +109,39 @@ public class MegaMan {
         //platform collision detection
         for (Platform platform : platforms) {
             Rectangle intersector = new Rectangle();
-
             if (Intersector.intersectRectangles(hitBox, platform.getRectangle(), intersector)){
                 platform.setColor(Color.BLUE);
                 if (intersector.getWidth() > intersector.getHeight()){
-
-                    //case 1: landing on a platform
-                    if (position.y <= platform.getTop() && position.y + hitBox.getHeight() > platform.getTop() && lastPosition.y > position.y) {
+                    if (position.y <= platform.getTop() &&
+                            position.y + hitBox.getHeight() > platform.getTop() &&
+                            lastPosition.y > position.y) {
                         velocity.y = 0;
                         position.y = position.y + intersector.getHeight();
                         jumpState = JumpState.GROUNDED;
                         Gdx.app.log(TAG, "1");
                     }
-                    //case 2: hit the bottom of the plaform
                     else if (position.y + hitBox.getHeight() >= platform.getBottom() &&
                             position.y < platform.getBottom() &&
                             isJumpState(JumpState.JUMPING)){
                         velocity.y = 0;
                         position.y = position.y - intersector.getHeight();
-                        Gdx.app.log(TAG, "2");
                     }
                 }
                 else if(intersector.getWidth() < intersector.getHeight()){
-                    if (position.x + hitBox.getWidth() > platform.getLeft() && isDirection(Direction.RIGHT)){
-                        position.x = position.x - intersector.getWidth();
-                        Gdx.app.log(TAG, "3");
+                    if (position.x + hitBox.getWidth() > platform.getLeft() &&
+                            position.x < platform.getLeft() && isDirection(Direction.RIGHT)){
+                        velocity.x = 0;
                     }
-                    else if (position.x < platform.getRight() && isDirection(Direction.LEFT)){
-                        position.x = position.x + intersector.getWidth();
-                        Gdx.app.log(TAG, "4");
+                    else if (position.x < platform.getRight() &&
+                            position.x + hitBox.getWidth() > platform.getRight() && isDirection(Direction.LEFT)){
+                        velocity.x = 0;
                     }
                 }
             }else{
                 platform.setColor(Color.LIME);
             }
-            
+
         }
-        Gdx.app.log(TAG, "velocity: " + velocity.x);
-        Gdx.app.log(TAG, "hitbox: " + hitBox);
-        Gdx.app.log(TAG, "nextFrame: " + nextFrame);
 
         lastPosition.set(position);
         position.mulAdd(velocity, delta);
@@ -197,8 +189,6 @@ public class MegaMan {
 
     public void debugRenderer(ShapeRenderer renderer) {
         renderer.rect(hitBox.x, hitBox.y, hitBox.width, hitBox.height);
-        renderer.setColor(Color.BLUE);
-        renderer.rect(nextFrame.x, nextFrame.y, nextFrame.width, nextFrame.height);
     }
 
     /**
@@ -236,26 +226,6 @@ public class MegaMan {
 
     private void updateHitBox() {
         hitBox.setPosition(position.x, position.y);
-    }
-
-    /**
-     * This is also a hitbox, its values depends on MM-s horizontal and vertical speed
-     * to determine the collision more precisely
-     */
-    private void updateNextFrame(){
-        float x, y, width, height;
-        if (isDirection(Direction.RIGHT)){
-            x = 0;
-            y = 0;
-            width = 0;
-            height = 0;
-        }else{
-            x = 0;
-            y = 0;
-            width = 0;
-            height = 0;
-        }
-        nextFrame.set(x, y, width, height);
     }
 
     /**
