@@ -58,6 +58,7 @@ public class GameScreen extends ScreenAdapter{
         level = new Level();
         level.setDebugOn(true);
         level.createPlatforms(MapObjectLoader.getPlatformColliders(tiledMap));
+        level.createLadders(MapObjectLoader.getLadderColliders(tiledMap));
 
     }
 

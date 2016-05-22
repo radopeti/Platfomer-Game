@@ -21,4 +21,6 @@ public class Constants {
     public static final float MEGAMAN_JUMP_TIME = 0.2f;
     public static final float MEGAMAN_WIDTH = 22;
     public static final float MEGAMAN_HEIGHT = 29;
+    public static final float MEGAMAN_CLIMBING_SPEED = 20;
+    public static final float MEGAMAN_CLIMBING_WIDTH = 16;
 }

@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.platformer.game.mapcomponents.Ladder;
 import com.platformer.game.mapcomponents.Platform;
 import com.platformer.game.utils.Assets;
 import com.platformer.game.utils.Enums.Direction;
@@ -19,6 +20,8 @@ import com.platformer.game.utils.Enums.JumpState;
 import com.platformer.game.utils.Enums.WalkingState;
 
 import static com.platformer.game.utils.Constants.GRAVITY;
+import static com.platformer.game.utils.Constants.MEGAMAN_CLIMBING_SPEED;
+import static com.platformer.game.utils.Constants.MEGAMAN_CLIMBING_WIDTH;
 import static com.platformer.game.utils.Constants.MEGAMAN_HEIGHT;
 import static com.platformer.game.utils.Constants.MEGAMAN_JUMP_SPEED;
 import static com.platformer.game.utils.Constants.MEGAMAN_JUMP_TIME;
@@ -40,6 +43,8 @@ public class MegaMan {
     private Rectangle hitBox;
     private float stateTime;
     private boolean flipX;
+    private boolean ableToClimb;
+    private boolean ableToMove;
     private Vector2 position;
     private Vector2 lastPosition;
     private Vector2 velocity;
@@ -64,6 +69,8 @@ public class MegaMan {
         direction = Direction.RIGHT;
         jumpState = JumpState.FALLING;
         flipX = true;
+        ableToClimb = false;
+        ableToMove = true;
     }
 
     public MegaMan(float x, float y) {
@@ -77,9 +84,14 @@ public class MegaMan {
         this.position.set(position);
     }
 
-    public void update(float delta, Array<Platform> platforms) {
+    public void update(float delta, Array<Platform> platforms, Array<Ladder> ladders) {
 
-        velocity.y -= GRAVITY;
+        if (isJumpState(JumpState.CLIMBING)){
+            velocity.y = 0;
+        }else{
+            velocity.y -= GRAVITY;
+        }
+
 
         if (position.y <= 0) {
             position.y = 0;
@@ -106,42 +118,17 @@ public class MegaMan {
             }
         }
 
-        //platform collision detection
-        for (Platform platform : platforms) {
-            Rectangle intersector = new Rectangle();
-            if (Intersector.intersectRectangles(hitBox, platform.getRectangle(), intersector)){
-                platform.setColor(Color.BLUE);
-                if (intersector.getWidth() > intersector.getHeight()){
-                    if (position.y <= platform.getTop() &&
-                            position.y + hitBox.getHeight() > platform.getTop() &&
-                            lastPosition.y > position.y) {
-                        velocity.y = 0;
-                        position.y = position.y + intersector.getHeight();
-                        jumpState = JumpState.GROUNDED;
-                        Gdx.app.log(TAG, "1");
-                    }
-                    else if (position.y + hitBox.getHeight() >= platform.getBottom() &&
-                            position.y < platform.getBottom() &&
-                            isJumpState(JumpState.JUMPING)){
-                        velocity.y = 0;
-                        position.y = position.y - intersector.getHeight();
-                    }
-                }
-                else if(intersector.getWidth() < intersector.getHeight()){
-                    if (position.x + hitBox.getWidth() > platform.getLeft() &&
-                            position.x < platform.getLeft() && isDirection(Direction.RIGHT)){
-                        velocity.x = 0;
-                    }
-                    else if (position.x < platform.getRight() &&
-                            position.x + hitBox.getWidth() > platform.getRight() && isDirection(Direction.LEFT)){
-                        velocity.x = 0;
-                    }
-                }
-            }else{
-                platform.setColor(Color.LIME);
-            }
-
+        //climb key control
+        if (Gdx.input.isKeyPressed(Keys.UP)){
+            Ladder ladder = ableToClimb(ladders);
+            climbOnLadder(ladder, MEGAMAN_CLIMBING_SPEED);
+        }else if(Gdx.input.isKeyPressed(Keys.DOWN)){
+            Ladder ladder = ableToClimb(ladders);
+            climbOnLadder(ladder, -MEGAMAN_CLIMBING_SPEED);
         }
+
+        //platform collision detection
+        checkPlatformCollision(platforms);
 
         lastPosition.set(position);
         position.mulAdd(velocity, delta);
@@ -237,10 +224,10 @@ public class MegaMan {
      */
     private void moveLeft(float delta) {
         stateTime += delta;
-        velocity.x = -MEGAMAN_MOVEMENT_SPEED;
         walkingState = WalkingState.RUNNING;
         direction = Direction.LEFT;
         flipX = false;
+        if (ableToMove) velocity.x = -MEGAMAN_MOVEMENT_SPEED;
     }
 
     /**
@@ -249,10 +236,10 @@ public class MegaMan {
      */
     private void moveRight(float delta) {
         stateTime += delta;
-        velocity.x = MEGAMAN_MOVEMENT_SPEED;
         walkingState = WalkingState.RUNNING;
         direction = Direction.RIGHT;
         flipX = true;
+        if (ableToMove) velocity.x = MEGAMAN_MOVEMENT_SPEED;
     }
 
     /**
@@ -264,6 +251,11 @@ public class MegaMan {
             jumpState = JumpState.JUMPING;
             velocity.y += MEGAMAN_JUMP_SPEED;
             jumpStartTime = TimeUtils.nanoTime();
+        } else if (isJumpState(JumpState.CLIMBING)){
+            velocity.y = -GRAVITY;
+            hitBox.setSize(MEGAMAN_WIDTH, MEGAMAN_HEIGHT);
+            jumpState = JumpState.FALLING;
+            ableToMove = true;
         } else if (isJumpState(JumpState.JUMPING)) {
             //calculate the current jumptime
             jumpTime = (TimeUtils.nanoTime() - jumpStartTime) * MathUtils.nanoToSec;
@@ -273,4 +265,65 @@ public class MegaMan {
         }
     }
 
+    /**
+     * Platform collision detection
+     */
+    private void checkPlatformCollision(Array<Platform> platforms){
+        for (Platform platform : platforms) {
+            Rectangle intersector = new Rectangle();
+            if (Intersector.intersectRectangles(hitBox, platform.getRectangle(), intersector)){
+                platform.setColor(Color.BLUE);
+                if (intersector.getWidth() > intersector.getHeight()){
+                    if (position.y <= platform.getTop() &&
+                            position.y + hitBox.getHeight() > platform.getTop() &&
+                            lastPosition.y > position.y) {
+                        velocity.y = 0;
+                        position.y = position.y + intersector.getHeight();
+                        jumpState = JumpState.GROUNDED;
+                    }
+                    else if (position.y + hitBox.getHeight() >= platform.getBottom() &&
+                            position.y < platform.getBottom() &&
+                            isJumpState(JumpState.JUMPING)){
+                        velocity.y = 0;
+                        position.y = position.y - intersector.getHeight();
+                    }
+                }
+                else if(intersector.getWidth() < intersector.getHeight()){
+                    if (position.x + hitBox.getWidth() > platform.getLeft() &&
+                            position.x < platform.getLeft() && isDirection(Direction.RIGHT)){
+                        velocity.x = 0;
+                    }
+                    else if (position.x + hitBox.getWidth() > platform.getRight() &&
+                            position.x < platform.getRight() &&
+                            isDirection(Direction.LEFT)){
+                        velocity.x = 0;
+                    }
+                }
+            }else{
+                platform.setColor(Color.LIME);
+            }
+        }
+    }
+
+    private Ladder ableToClimb(Array<Ladder> ladders){
+        for (Ladder ladder : ladders){
+            Rectangle intersector = new Rectangle();
+            if (Intersector.intersectRectangles(hitBox, ladder.getRectangle(), intersector)){
+                if (intersector.getWidth() > 12){
+                    return ladder;
+                }
+            }
+        }
+        return null;
+    }
+
+    private void climbOnLadder(Ladder ladder, float climbingSpeed){
+        if (ladder != null){
+            position.x = ladder.getX();
+            velocity.y = climbingSpeed;
+            ableToMove = false;
+            jumpState = JumpState.CLIMBING;
+            hitBox.setSize(MEGAMAN_CLIMBING_WIDTH, hitBox.height);
+        }
+    }
 }

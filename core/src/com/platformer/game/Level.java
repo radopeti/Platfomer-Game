@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.platformer.game.characters.MegaMan;
+import com.platformer.game.mapcomponents.Ladder;
 import com.platformer.game.mapcomponents.Platform;
 
 /**
@@ -16,15 +17,17 @@ public class Level {
     private MegaMan megaMan;
     private boolean debugOn;
     private Array<Platform> platforms;
+    private Array<Ladder> ladders;
 
     public Level() {
         debugOn = false;
         platforms = new Array<Platform>();
+        ladders = new Array<Ladder>();
         megaMan = new MegaMan(20, 20);
     }
 
     public void update(float delta) {
-        megaMan.update(delta, platforms);
+        megaMan.update(delta, platforms, ladders);
     }
 
     public void render(SpriteBatch batch) {
@@ -35,6 +38,9 @@ public class Level {
         if (debugOn) {
             for (Platform platform : platforms) {
                 platform.render(renderer);
+            }
+            for (Ladder ladder : ladders){
+                ladder.render(renderer);
             }
             renderer.setColor(Color.WHITE);
             megaMan.debugRenderer(renderer);
@@ -64,4 +70,10 @@ public class Level {
         }
     }
 
+    public void createLadders(Array<Rectangle> rectangles) {
+        for (Rectangle rectangle : rectangles){
+            Ladder ladder = new Ladder(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+            ladders.add(ladder);
+        }
+    }
 }

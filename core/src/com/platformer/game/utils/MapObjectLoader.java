@@ -22,4 +22,14 @@ public class MapObjectLoader {
         return rectangles;
     }
 
+    public static Array<Rectangle> getLadderColliders(TiledMap map) {
+        MapObjects mapObjects = map.getLayers().get("Ladders").getObjects();
+        Array<Rectangle> rectangles = new Array<Rectangle>();
+        for (MapObject object : mapObjects) {
+            Rectangle rectangle = ((RectangleMapObject) object).getRectangle();
+            rectangles.add(rectangle);
+        }
+        return rectangles;
+    }
+
 }
