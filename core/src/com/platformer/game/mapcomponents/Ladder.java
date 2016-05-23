@@ -52,6 +52,10 @@ public class Ladder {
         return x;
     }
 
+    public float getTop(){
+        return getY() + getHeight();
+    }
+
     public Rectangle getRectangle(){
         return rectangle;
     }

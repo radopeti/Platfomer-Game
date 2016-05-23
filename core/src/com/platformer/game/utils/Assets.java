@@ -49,16 +49,19 @@ public class Assets implements Disposable, AssetErrorListener{
     public class MegaManAssets{
         public final TextureRegion jumpingRegion;
         public final TextureRegion fallingRegion;
+        public final TextureRegion climbOnTop;
 
         public final Array<TextureRegion> runningFrames;
         public final Animation runAnimation;
         public final Array<TextureRegion> staindingFrames;
         public final Animation standingAnimation;
-
+        public final Array<TextureRegion> climbingFrames;
+        public final Animation climbingAnimation;
 
         public MegaManAssets(TextureAtlas atlas){
             jumpingRegion = atlas.findRegion("jumping");
             fallingRegion = atlas.findRegion("falling");
+            climbOnTop = atlas.findRegion("climbing-top");
 
             runningFrames = new Array<TextureRegion>();
             runningFrames.add(atlas.findRegion("running-0"));
@@ -74,6 +77,13 @@ public class Assets implements Disposable, AssetErrorListener{
             staindingFrames.add(atlas.findRegion("standing-1"));
             staindingFrames.add(atlas.findRegion("standing-2"));
             standingAnimation = new Animation(MEGAMAN_STANDING_ANIMATION_FRAME_TIME, staindingFrames, Animation.PlayMode.LOOP);
+
+            climbingFrames = new Array<TextureRegion>();
+            climbingFrames.add(atlas.findRegion("climbing-0"));
+            climbingFrames.add(atlas.findRegion("climbing-1"));
+            climbingFrames.add(atlas.findRegion("climbing-2"));
+            climbingFrames.add(atlas.findRegion("climbing-3"));
+            climbingAnimation = new Animation(MEGAMAN_CLIMBING_ANIMATION_FRAME_TIME, climbingFrames, Animation.PlayMode.LOOP);
         }
     }
 }

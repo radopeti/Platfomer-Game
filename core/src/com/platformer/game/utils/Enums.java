@@ -7,7 +7,7 @@ package com.platformer.game.utils;
 public class Enums {
     public enum WalkingState{
         STANDING,
-        RUNNING
+        RUNNING,
     }
 
     public enum Direction{
