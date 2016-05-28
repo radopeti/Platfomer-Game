@@ -19,6 +19,12 @@ import com.platformer.game.characters.MegaMan;
 import com.platformer.game.utils.Assets;
 import com.platformer.game.utils.MapObjectLoader;
 
+import java.util.Iterator;
+
+import javax.swing.text.html.HTMLDocument;
+
+import javafx.beans.property.MapProperty;
+
 import static com.platformer.game.utils.Constants.*;
 /**
  * Created by radopeti on 2016. 05. 17..
@@ -38,9 +44,6 @@ public class GameScreen extends ScreenAdapter{
 
     private Level level;
 
-    //tiled map
-    private TiledMap tiledMap;
-    private MapRenderer mapRenderer;
 
     @Override
     public void show() {
@@ -51,14 +54,8 @@ public class GameScreen extends ScreenAdapter{
         camera.setToOrtho(false);
         Assets.instance.init(new AssetManager());
 
-        tiledMap = new TmxMapLoader().load(TESTMAP_NAME);
-        mapRenderer = new OrthogonalTiledMapRenderer(tiledMap, batch);
-        mapRenderer.setView(camera);
-
-        level = new Level();
+        level = new Level(camera, viewport, batch);
         level.setDebugOn(true);
-        level.createPlatforms(MapObjectLoader.getPlatformColliders(tiledMap));
-        level.createLadders(MapObjectLoader.getLadderColliders(tiledMap));
 
     }
 
@@ -74,9 +71,9 @@ public class GameScreen extends ScreenAdapter{
 
         batch.setProjectionMatrix(camera.combined);
         renderer.setProjectionMatrix(camera.combined);
-
+        viewport.apply();
         level.update(delta);
-        mapRenderer.render();
+        level.renderMap();
 
         renderer.begin(ShapeRenderer.ShapeType.Line);
             level.debugRender(renderer);
@@ -91,6 +88,6 @@ public class GameScreen extends ScreenAdapter{
     public void dispose() {
         batch.dispose();
         renderer.dispose();
-        tiledMap.dispose();
+        level.dispose();
     }
 }

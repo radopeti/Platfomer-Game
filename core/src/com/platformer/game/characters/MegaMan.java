@@ -236,6 +236,10 @@ public class MegaMan {
         return false;
     }
 
+    public Vector2 getPosition() {
+        return position;
+    }
+
     /**
      * Update the hitbox position
      */
