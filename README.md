@@ -1,5 +1,5 @@
 # Platfomer-Game
-This is a simple 2D platformer game for my own education and practise.
+# This is a simple 2D platformer game for my own education and practise.
 Controls:
 Move left: left key
 Move right: right key
