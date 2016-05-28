@@ -1,5 +1,7 @@
 # Platfomer-Game
 #### This is a simple 2D platformer game for my own education and practise.
+Latest desktop build: https://goo.gl/FQR4iV
+
 Controls:
 
 - Move left: left key
