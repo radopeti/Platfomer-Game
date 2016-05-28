@@ -1,5 +1,6 @@
 package com.platformer.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -14,25 +15,34 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.platformer.game.characters.MegaMan;
+import com.platformer.game.entities.Bullet;
+import com.platformer.game.listeners.BulletListener;
 import com.platformer.game.mapcomponents.Ladder;
 import com.platformer.game.mapcomponents.Platform;
 import com.platformer.game.utils.CustomCam;
+import com.platformer.game.utils.Enums;
 import com.platformer.game.utils.MapObjectLoader;
 import com.platformer.game.utils.MapUtils;
 
+import java.util.Iterator;
+
+import static com.platformer.game.utils.Constants.MEGAMAN_SHOOTING_HIGH;
 import static com.platformer.game.utils.Constants.TESTMAP_NAME;
 
 /**
  * Created by radopeti on 2016. 05. 17..
  * This class renders the map, characters
  */
-public class Level implements Disposable {
+public class Level implements Disposable, BulletListener {
     private MegaMan megaMan;
     private boolean debugOn;
     private Array<Platform> platforms;
     private Array<Ladder> ladders;
+    private Array<Bullet> megaManBullets;
     private Viewport viewport;
     private OrthographicCamera camera;
+    private float currentViewLeft;
+    private float currentViewRight;
 
     //tiled map
     private TiledMap tiledMap;
@@ -44,10 +54,12 @@ public class Level implements Disposable {
         debugOn = false;
         platforms = new Array<Platform>();
         ladders = new Array<Ladder>();
+        megaManBullets = new Array<Bullet>();
         megaMan = new MegaMan(20, 20);
+        megaMan.setBulletListener(this);
         this.viewport = viewport;
         this.camera = camera;
-
+        updateCurrentView();
         tiledMap = new TmxMapLoader().load(TESTMAP_NAME);
         mapRenderer = new OrthogonalTiledMapRenderer(tiledMap, batch);
         mapRenderer.setView(this.camera);
@@ -60,6 +72,15 @@ public class Level implements Disposable {
 
     public void update(float delta) {
         megaMan.update(delta, platforms, ladders);
+        updateCurrentView();
+        Gdx.app.log("lvel", "bullet array size: " + megaManBullets.size);
+        for (Bullet bullet : megaManBullets){
+            bullet.update(delta);
+            if (bullet.getPosition().x < currentViewLeft || bullet.getPosition().x > currentViewRight){
+                bullet.setActive(false);
+            }
+        }
+        removeInactiveBullets();
         updateCamera();
     }
 
@@ -69,7 +90,9 @@ public class Level implements Disposable {
 
     public void render(SpriteBatch batch) {
         megaMan.render(batch);
-
+        for (Bullet bullet : megaManBullets){
+            bullet.render(batch);
+        }
     }
 
     public void debugRender(ShapeRenderer renderer) {
@@ -79,6 +102,9 @@ public class Level implements Disposable {
             }
             for (Ladder ladder : ladders){
                 ladder.render(renderer);
+            }
+            for (Bullet bullet : megaManBullets){
+                bullet.debugRender(renderer);
             }
             renderer.setColor(Color.WHITE);
             megaMan.debugRenderer(renderer);
@@ -127,5 +153,34 @@ public class Level implements Disposable {
         if (megaMan.getPosition().y - viewport.getWorldHeight() / 2 > 0 && megaMan.getPosition().y + viewport.getWorldHeight() / 2 < mapHeight){
             camera.position.y = megaMan.getPosition().y;
         }
+    }
+
+    private void removeInactiveBullets(){
+        Iterator<Bullet> it = megaManBullets.iterator();
+        while (it.hasNext()){
+            Bullet bullet = it.next();
+            if (!bullet.isActive()) it.remove();
+        }
+    }
+
+    private void updateCurrentView(){
+        currentViewLeft = camera.position.x - viewport.getWorldWidth() / 2;
+        currentViewRight = camera.position.x + viewport.getWorldWidth() / 2;
+    }
+
+    @Override
+    public void createBullet() {
+        float x = 0;
+        float y = 0;
+        Enums.Direction direction = megaMan.getDirection();
+        if (direction.equals(Enums.Direction.RIGHT)){
+            x = megaMan.getPosition().x + megaMan.getHitBox().getWidth();
+            y = megaMan.getPosition().y + MEGAMAN_SHOOTING_HIGH;
+        }else if (direction.equals(Enums.Direction.LEFT)){
+            x = megaMan.getPosition().x;
+            y = megaMan.getPosition().y + MEGAMAN_SHOOTING_HIGH;
+        }
+        Bullet bullet = new Bullet(x, y, direction);
+        megaManBullets.add(bullet);
     }
 }

@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.platformer.game.listeners.BulletListener;
 import com.platformer.game.mapcomponents.Ladder;
 import com.platformer.game.mapcomponents.Platform;
 import com.platformer.game.utils.Assets;
@@ -57,6 +58,8 @@ public class MegaMan {
 
     private float jumpStartTime;
     private float jumpTime;
+
+    private BulletListener bulletListener;
 
     /**
      * Default constructor
@@ -149,6 +152,11 @@ public class MegaMan {
             }
         }
 
+        //shoot key
+        if (Gdx.input.isKeyJustPressed(Keys.C)){
+            shoot();
+        }
+
         //platform collision detection
         checkPlatformCollision(platforms);
 
@@ -236,8 +244,26 @@ public class MegaMan {
         return false;
     }
 
+    public Direction getDirection() {
+        return direction;
+    }
+
     public Vector2 getPosition() {
         return position;
+    }
+
+    public Rectangle getHitBox() {
+        return hitBox;
+    }
+
+    public void setBulletListener(BulletListener bulletListener) {
+        this.bulletListener = bulletListener;
+    }
+
+    private void shoot(){
+        if (bulletListener != null){
+            bulletListener.createBullet();
+        }
     }
 
     /**

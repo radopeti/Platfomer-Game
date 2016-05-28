@@ -4,6 +4,13 @@ size: 256,64
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+bullet
+  rotate: false
+  xy: 2, 17
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
 climbing-0
   rotate: false
   xy: 174, 30

@@ -50,6 +50,7 @@ public class Assets implements Disposable, AssetErrorListener{
         public final TextureRegion jumpingRegion;
         public final TextureRegion fallingRegion;
         public final TextureRegion climbOnTop;
+        public final TextureRegion bullet;
 
         public final Array<TextureRegion> runningFrames;
         public final Animation runAnimation;
@@ -62,6 +63,7 @@ public class Assets implements Disposable, AssetErrorListener{
             jumpingRegion = atlas.findRegion("jumping");
             fallingRegion = atlas.findRegion("falling");
             climbOnTop = atlas.findRegion("climbing-top");
+            bullet = atlas.findRegion("bullet");
 
             runningFrames = new Array<TextureRegion>();
             runningFrames.add(atlas.findRegion("running-0"));
