@@ -1,6 +1,6 @@
 # Platfomer-Game
-#### This is a simple 2D platformer game for my own education and practise.
-Latest desktop build: https://goo.gl/FQR4iV
+#### This is a simple 2D platformer game for my own education and practise powered by [libGDX](https://libgdx.badlogicgames.com/).
+Latest desktop build: https://goo.gl/8AuSql
 
 Controls:
 
