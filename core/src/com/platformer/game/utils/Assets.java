@@ -51,6 +51,8 @@ public class Assets implements Disposable, AssetErrorListener{
         public final TextureRegion fallingRegion;
         public final TextureRegion climbOnTop;
         public final TextureRegion bullet;
+        public final TextureRegion standAndShoot;
+        public final TextureRegion jumpOrFallShoot;
 
         public final Array<TextureRegion> runningFrames;
         public final Animation runAnimation;
@@ -58,12 +60,18 @@ public class Assets implements Disposable, AssetErrorListener{
         public final Animation standingAnimation;
         public final Array<TextureRegion> climbingFrames;
         public final Animation climbingAnimation;
+        public final Array<TextureRegion> shootAndRunFrames;
+        public final Animation shootAndRunAnimation;
+        public final Array<TextureRegion> climbAndShootFrames;
+        public final Animation climbAndShootAnimation;
 
         public MegaManAssets(TextureAtlas atlas){
             jumpingRegion = atlas.findRegion("jumping");
             fallingRegion = atlas.findRegion("falling");
             climbOnTop = atlas.findRegion("climbing-top");
             bullet = atlas.findRegion("bullet");
+            standAndShoot = atlas.findRegion("stand-shooting");
+            jumpOrFallShoot = atlas.findRegion("jump-fall-shoot");
 
             runningFrames = new Array<TextureRegion>();
             runningFrames.add(atlas.findRegion("running-0"));
@@ -86,6 +94,20 @@ public class Assets implements Disposable, AssetErrorListener{
             climbingFrames.add(atlas.findRegion("climbing-2"));
             climbingFrames.add(atlas.findRegion("climbing-3"));
             climbingAnimation = new Animation(MEGAMAN_CLIMBING_ANIMATION_FRAME_TIME, climbingFrames, Animation.PlayMode.LOOP);
+
+            shootAndRunFrames = new Array<TextureRegion>();
+            shootAndRunFrames.add(atlas.findRegion("run-shoot-0"));
+            shootAndRunFrames.add(atlas.findRegion("run-shoot-1"));
+            shootAndRunFrames.add(atlas.findRegion("run-shoot-2"));
+            shootAndRunFrames.add(atlas.findRegion("run-shoot-3"));
+            shootAndRunFrames.add(atlas.findRegion("run-shoot-4"));
+            shootAndRunFrames.add(atlas.findRegion("run-shoot-5"));
+            shootAndRunAnimation = new Animation(MEGAMAN_CLIMBING_ANIMATION_FRAME_TIME, shootAndRunFrames, Animation.PlayMode.LOOP);
+
+            climbAndShootFrames = new Array<TextureRegion>();
+            climbAndShootFrames.add(atlas.findRegion("climb-shoot-0"));
+            climbAndShootFrames.add(atlas.findRegion("climb-shoot-1"));
+            climbAndShootAnimation = new Animation(MEGAMAN_CLIMBING_ANIMATION_FRAME_TIME, climbAndShootFrames, Animation.PlayMode.LOOP);
         }
     }
 }

@@ -16,19 +16,10 @@ import com.platformer.game.listeners.BulletListener;
 import com.platformer.game.mapcomponents.Ladder;
 import com.platformer.game.mapcomponents.Platform;
 import com.platformer.game.utils.Assets;
-import com.platformer.game.utils.Enums.Direction;
-import com.platformer.game.utils.Enums.JumpState;
-import com.platformer.game.utils.Enums.WalkingState;
+import com.platformer.game.utils.Enums.*;
 
-import static com.platformer.game.utils.Constants.GRAVITY;
-import static com.platformer.game.utils.Constants.LADDER_INTERSECTION_MIN_WIDTH;
-import static com.platformer.game.utils.Constants.MEGAMAN_CLIMBING_SPEED;
-import static com.platformer.game.utils.Constants.MEGAMAN_CLIMBING_WIDTH;
-import static com.platformer.game.utils.Constants.MEGAMAN_HEIGHT;
-import static com.platformer.game.utils.Constants.MEGAMAN_JUMP_SPEED;
-import static com.platformer.game.utils.Constants.MEGAMAN_JUMP_TIME;
-import static com.platformer.game.utils.Constants.MEGAMAN_MOVEMENT_SPEED;
-import static com.platformer.game.utils.Constants.MEGAMAN_WIDTH;
+
+import static com.platformer.game.utils.Constants.*;
 
 /**
  * Created by radopeti on 2016. 05. 17..
@@ -55,9 +46,15 @@ public class MegaMan {
     private WalkingState walkingState;
     private Direction direction;
     private JumpState jumpState;
+    private ShootState shootState;
 
     private float jumpStartTime;
     private float jumpTime;
+
+    private float shootStartTime;
+    private float shootDelay;
+    private boolean canShoot;
+    private float shootingHeight;
 
     private BulletListener bulletListener;
 
@@ -73,9 +70,12 @@ public class MegaMan {
         walkingState = WalkingState.STANDING;
         direction = Direction.RIGHT;
         jumpState = JumpState.FALLING;
+        shootState = ShootState.NOT_SHOOTING;
         flipX = true;
         climbOnTop = false;
         ableToMove = true;
+        canShoot = true;
+        shootingHeight = MEGAMAN_DEF_SHOOTING_HEIGHT;
     }
 
     public MegaMan(float x, float y) {
@@ -153,8 +153,19 @@ public class MegaMan {
         }
 
         //shoot key
-        if (Gdx.input.isKeyJustPressed(Keys.C)){
-            shoot();
+        if (Gdx.input.isKeyPressed(Keys.C)){
+            shootState = ShootState.SHOOTING;
+            if (canShoot){
+                shoot();
+                canShoot = false;
+                shootStartTime = TimeUtils.nanoTime();
+            }else{
+                shootDelay = (TimeUtils.nanoTime() - shootStartTime) * MathUtils.nanoToSec;
+                if (shootDelay > MEGAMAN_SHOOTING_DELAY) canShoot = true;
+            }
+        }else{
+            canShoot = true;
+            shootState = ShootState.NOT_SHOOTING;
         }
 
         //platform collision detection
@@ -163,6 +174,7 @@ public class MegaMan {
         lastPosition.set(position);
         position.mulAdd(velocity, delta);
         updateHitBox();
+        setShootingHeight(jumpState);
     }
 
 
@@ -173,18 +185,38 @@ public class MegaMan {
     public void render(SpriteBatch batch) {
 
         if (isWalkingState(WalkingState.STANDING)) {
-            stateTime += Gdx.graphics.getDeltaTime();
-            currentRegion = Assets.instance.megaManAssets.standingAnimation.getKeyFrame(stateTime);
+            if (isShootState(ShootState.SHOOTING)){
+                currentRegion = Assets.instance.megaManAssets.standAndShoot;
+            }else {
+                stateTime += Gdx.graphics.getDeltaTime();
+                currentRegion = Assets.instance.megaManAssets.standingAnimation.getKeyFrame(stateTime);
+            }
         } else if (isWalkingState(WalkingState.RUNNING)) {
-            currentRegion = Assets.instance.megaManAssets.runAnimation.getKeyFrame(stateTime);
+            if (isShootState(ShootState.SHOOTING)){
+                currentRegion = Assets.instance.megaManAssets.shootAndRunAnimation.getKeyFrame(stateTime);
+            }else{
+                currentRegion = Assets.instance.megaManAssets.runAnimation.getKeyFrame(stateTime);
+            }
         }
 
         if (isJumpState(JumpState.JUMPING)) {
-            currentRegion = Assets.instance.megaManAssets.jumpingRegion;
+            if (isShootState(ShootState.SHOOTING)){
+                currentRegion = Assets.instance.megaManAssets.jumpOrFallShoot;
+            }else{
+                currentRegion = Assets.instance.megaManAssets.jumpingRegion;
+            }
         } else if (isJumpState(JumpState.FALLING)) {
-            currentRegion = Assets.instance.megaManAssets.fallingRegion;
+            if (isShootState(ShootState.SHOOTING)){
+                currentRegion = Assets.instance.megaManAssets.jumpOrFallShoot;
+            }else{
+                currentRegion = Assets.instance.megaManAssets.fallingRegion;
+            }
         } else if (isJumpState(JumpState.CLIMBING) && !climbOnTop){
-            currentRegion = Assets.instance.megaManAssets.climbingAnimation.getKeyFrame(climbTime);
+            if (isShootState(ShootState.SHOOTING)){
+                currentRegion = Assets.instance.megaManAssets.climbAndShootAnimation.getKeyFrame(climbTime);
+            }else{
+                currentRegion = Assets.instance.megaManAssets.climbingAnimation.getKeyFrame(climbTime);
+            }
         } else if (isJumpState(JumpState.CLIMBING) && climbOnTop){
             currentRegion = Assets.instance.megaManAssets.climbOnTop;
         }
@@ -209,6 +241,11 @@ public class MegaMan {
 
     public void debugRenderer(ShapeRenderer renderer) {
         renderer.rect(hitBox.x, hitBox.y, hitBox.width, hitBox.height);
+    }
+
+    public boolean isShootState(ShootState shootState){
+        if (this.shootState.equals(shootState)) return true;
+        return false;
     }
 
     /**
@@ -242,6 +279,18 @@ public class MegaMan {
     public boolean isJumpState(JumpState jumpState) {
         if (this.jumpState.equals(jumpState)) return true;
         return false;
+    }
+
+    public float getShootingHeight() {
+        return shootingHeight;
+    }
+
+    public void setShootingHeight(JumpState jumpState) {
+        if (isJumpState(JumpState.CLIMBING) || isJumpState(JumpState.FALLING) || isJumpState(JumpState.JUMPING)){
+            shootingHeight = MEGAMAN_OTHER_SHOOTING_HEIGHT;
+        }else{
+            shootingHeight = MEGAMAN_DEF_SHOOTING_HEIGHT;
+        }
     }
 
     public Direction getDirection() {

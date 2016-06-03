@@ -1,6 +1,6 @@
 
 megaman.png
-size: 256,64
+size: 512,64
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -11,114 +11,184 @@ bullet
   orig: 8, 8
   offset: 0, 0
   index: -1
+climb-shoot-0
+  rotate: false
+  xy: 207, 30
+  size: 25, 32
+  orig: 25, 32
+  offset: 0, 0
+  index: -1
+climb-shoot-1
+  rotate: false
+  xy: 234, 30
+  size: 25, 32
+  orig: 25, 32
+  offset: 0, 0
+  index: -1
 climbing-0
   rotate: false
-  xy: 174, 30
+  xy: 459, 30
   size: 18, 32
   orig: 18, 32
   offset: 0, 0
   index: -1
 climbing-1
   rotate: false
-  xy: 214, 32
+  xy: 287, 2
   size: 18, 30
   orig: 18, 30
   offset: 0, 0
   index: -1
 climbing-2
   rotate: false
-  xy: 194, 30
+  xy: 479, 30
   size: 18, 32
   orig: 18, 32
   offset: 0, 0
   index: -1
 climbing-3
   rotate: false
-  xy: 234, 32
+  xy: 345, 4
   size: 18, 30
   orig: 18, 30
   offset: 0, 0
   index: -1
 climbing-top
   rotate: false
-  xy: 235, 5
+  xy: 386, 6
   size: 19, 25
   orig: 19, 25
   offset: 0, 0
   index: -1
 falling
   rotate: false
-  xy: 30, 26
+  xy: 61, 26
   size: 23, 36
   orig: 23, 36
   offset: 0, 0
   index: -1
-jumping
+jump-fall-shoot
   rotate: false
   xy: 2, 27
+  size: 29, 35
+  orig: 29, 35
+  offset: 0, 0
+  index: -1
+jumping
+  rotate: false
+  xy: 33, 27
   size: 26, 35
   orig: 26, 35
   offset: 0, 0
   index: -1
+run-shoot-0
+  rotate: false
+  xy: 119, 36
+  size: 28, 26
+  orig: 28, 26
+  offset: 0, 0
+  index: -1
+run-shoot-1
+  rotate: false
+  xy: 261, 33
+  size: 24, 29
+  orig: 24, 29
+  offset: 0, 0
+  index: -1
+run-shoot-2
+  rotate: false
+  xy: 287, 34
+  size: 25, 28
+  orig: 25, 28
+  offset: 0, 0
+  index: -1
+run-shoot-3
+  rotate: false
+  xy: 149, 36
+  size: 28, 26
+  orig: 28, 26
+  offset: 0, 0
+  index: -1
+run-shoot-4
+  rotate: false
+  xy: 314, 33
+  size: 24, 29
+  orig: 24, 29
+  offset: 0, 0
+  index: -1
+run-shoot-5
+  rotate: false
+  xy: 179, 34
+  size: 26, 28
+  orig: 26, 28
+  offset: 0, 0
+  index: -1
 running-0
   rotate: false
-  xy: 214, 2
+  xy: 365, 6
   size: 19, 28
   orig: 19, 28
   offset: 0, 0
   index: -1
 running-1
   rotate: false
-  xy: 75, 5
+  xy: 307, 2
   size: 17, 29
   orig: 17, 29
   offset: 0, 0
   index: -1
 running-2
   rotate: false
-  xy: 82, 36
+  xy: 367, 36
   size: 22, 26
   orig: 22, 26
   offset: 0, 0
   index: -1
 running-3
   rotate: false
-  xy: 55, 6
+  xy: 407, 3
   size: 18, 28
   orig: 18, 28
   offset: 0, 0
   index: -1
 running-4
   rotate: false
-  xy: 94, 2
+  xy: 326, 2
   size: 17, 29
   orig: 17, 29
   offset: 0, 0
   index: -1
 running-5
   rotate: false
-  xy: 55, 36
+  xy: 340, 36
   size: 25, 26
   orig: 25, 26
   offset: 0, 0
   index: -1
+stand-shooting
+  rotate: false
+  xy: 86, 35
+  size: 31, 27
+  orig: 31, 27
+  offset: 0, 0
+  index: -1
 standing-0
   rotate: false
-  xy: 106, 33
+  xy: 391, 33
   size: 21, 29
   orig: 21, 29
   offset: 0, 0
   index: -1
 standing-1
   rotate: false
-  xy: 129, 33
+  xy: 414, 33
   size: 21, 29
   orig: 21, 29
   offset: 0, 0
   index: -1
 standing-2
   rotate: false
-  xy: 152, 33
+  xy: 437, 33
   size: 20, 29
   orig: 20, 29
   offset: 0, 0

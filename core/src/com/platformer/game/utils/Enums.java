@@ -10,6 +10,11 @@ public class Enums {
         RUNNING,
     }
 
+    public enum ShootState{
+        SHOOTING,
+        NOT_SHOOTING
+    }
+
     public enum Direction{
         LEFT,
         RIGHT

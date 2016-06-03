@@ -25,7 +25,9 @@ public class Constants {
     public static final float MEGAMAN_CLIMBING_SPEED = 50;
     public static final float MEGAMAN_CLIMBING_WIDTH = 16;
     public static final float MEGAMAN_BULLET_SPEED = 250;
-    public static final float MEGAMAN_SHOOTING_HIGH = 10;
+    public static final float MEGAMAN_DEF_SHOOTING_HEIGHT = 10;
+    public static final float MEGAMAN_OTHER_SHOOTING_HEIGHT = 16;
+    public static final float MEGAMAN_SHOOTING_DELAY = 0.3f;
 
     public static final float LADDER_INTERSECTION_MIN_WIDTH = 12;
 }

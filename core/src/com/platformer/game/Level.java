@@ -26,7 +26,6 @@ import com.platformer.game.utils.MapUtils;
 
 import java.util.Iterator;
 
-import static com.platformer.game.utils.Constants.MEGAMAN_SHOOTING_HIGH;
 import static com.platformer.game.utils.Constants.TESTMAP_NAME;
 
 /**
@@ -173,12 +172,13 @@ public class Level implements Disposable, BulletListener {
         float x = 0;
         float y = 0;
         Enums.Direction direction = megaMan.getDirection();
+        float height = megaMan.getShootingHeight();
         if (direction.equals(Enums.Direction.RIGHT)){
             x = megaMan.getPosition().x + megaMan.getHitBox().getWidth();
-            y = megaMan.getPosition().y + MEGAMAN_SHOOTING_HIGH;
+            y = megaMan.getPosition().y + height;
         }else if (direction.equals(Enums.Direction.LEFT)){
             x = megaMan.getPosition().x;
-            y = megaMan.getPosition().y + MEGAMAN_SHOOTING_HIGH;
+            y = megaMan.getPosition().y + height;
         }
         Bullet bullet = new Bullet(x, y, direction);
         megaManBullets.add(bullet);
