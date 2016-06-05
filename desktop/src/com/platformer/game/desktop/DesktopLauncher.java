@@ -7,7 +7,7 @@ import com.platformer.game.PlatformerGame;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
-		TexturePacker.process("megaman", "atlas", "megaman.atlas");
+		//TexturePacker.process("megaman", "atlas", "megaman.atlas");
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		new LwjglApplication(new PlatformerGame(), config);
 	}

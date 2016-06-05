@@ -64,6 +64,10 @@ public class Assets implements Disposable, AssetErrorListener{
         public final Animation shootAndRunAnimation;
         public final Array<TextureRegion> climbAndShootFrames;
         public final Animation climbAndShootAnimation;
+        public final float climbingWidthCorrection;
+        public final float standShootWidthCorrection;
+        public final float fallShootWidthCorrection;
+        public final float jumpShootWidthCorrection;
 
         public MegaManAssets(TextureAtlas atlas){
             jumpingRegion = atlas.findRegion("jumping");
@@ -72,6 +76,16 @@ public class Assets implements Disposable, AssetErrorListener{
             bullet = atlas.findRegion("bullet");
             standAndShoot = atlas.findRegion("stand-shooting");
             jumpOrFallShoot = atlas.findRegion("jump-fall-shoot");
+
+            climbingWidthCorrection = atlas.findRegion("climb-shoot-0").originalWidth -
+                    atlas.findRegion("climbing-0").originalWidth;
+            standShootWidthCorrection = atlas.findRegion("stand-shooting").originalWidth -
+                    atlas.findRegion("standing-0").originalWidth;
+            fallShootWidthCorrection = atlas.findRegion("jump-fall-shoot").originalWidth -
+                    atlas.findRegion("falling").originalWidth;
+            jumpShootWidthCorrection = atlas.findRegion("jump-fall-shoot").originalWidth -
+                    atlas.findRegion("jumping").originalWidth;
+
 
             runningFrames = new Array<TextureRegion>();
             runningFrames.add(atlas.findRegion("running-0"));

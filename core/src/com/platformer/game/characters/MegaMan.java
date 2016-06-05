@@ -87,6 +87,7 @@ public class MegaMan {
     public MegaMan(Vector2 position) {
         this();
         this.position.set(position);
+        this.hitBox.set(position.x, position.y, MEGAMAN_WIDTH, MEGAMAN_HEIGHT);
     }
 
     public void update(float delta, Array<Platform> platforms, Array<Ladder> ladders) {
@@ -183,10 +184,12 @@ public class MegaMan {
      * @param batch SpriteBatch
      */
     public void render(SpriteBatch batch) {
+        float correction = 0;
 
         if (isWalkingState(WalkingState.STANDING)) {
             if (isShootState(ShootState.SHOOTING)){
                 currentRegion = Assets.instance.megaManAssets.standAndShoot;
+                if (isDirection(Direction.LEFT)) correction = MEGAMAN_STANDING_WIDTH_CORRECTION;
             }else {
                 stateTime += Gdx.graphics.getDeltaTime();
                 currentRegion = Assets.instance.megaManAssets.standingAnimation.getKeyFrame(stateTime);
@@ -202,18 +205,21 @@ public class MegaMan {
         if (isJumpState(JumpState.JUMPING)) {
             if (isShootState(ShootState.SHOOTING)){
                 currentRegion = Assets.instance.megaManAssets.jumpOrFallShoot;
+                if (isDirection(Direction.LEFT)) correction = MEGAMAN_JUMP_WIDTH_CORRECTION;
             }else{
                 currentRegion = Assets.instance.megaManAssets.jumpingRegion;
             }
         } else if (isJumpState(JumpState.FALLING)) {
             if (isShootState(ShootState.SHOOTING)){
                 currentRegion = Assets.instance.megaManAssets.jumpOrFallShoot;
+                if (isDirection(Direction.LEFT)) correction = MEGAMAN_FALL_WIDTH_CORRECTION;
             }else{
                 currentRegion = Assets.instance.megaManAssets.fallingRegion;
             }
         } else if (isJumpState(JumpState.CLIMBING) && !climbOnTop){
             if (isShootState(ShootState.SHOOTING)){
                 currentRegion = Assets.instance.megaManAssets.climbAndShootAnimation.getKeyFrame(climbTime);
+                if (isDirection(Direction.LEFT)) correction = MEGAMAN_CLIMBING_WIDTH_CORRECTION;
             }else{
                 currentRegion = Assets.instance.megaManAssets.climbingAnimation.getKeyFrame(climbTime);
             }
@@ -222,7 +228,7 @@ public class MegaMan {
         }
 
         batch.draw(currentRegion.getTexture(),
-                position.x,
+                position.x - correction,
                 position.y,
                 0,
                 0,
@@ -239,10 +245,20 @@ public class MegaMan {
                 false);
     }
 
+
+    /**
+     * Renders MM's hitbox for debugging puposes
+     * @param renderer
+     */
     public void debugRenderer(ShapeRenderer renderer) {
         renderer.rect(hitBox.x, hitBox.y, hitBox.width, hitBox.height);
     }
 
+    /**
+     * Helper method instead of using shootState == ShootState.STATE
+     * @param shootState enum
+     * @return true if current state equals the param shootState
+     */
     public boolean isShootState(ShootState shootState){
         if (this.shootState.equals(shootState)) return true;
         return false;
@@ -281,10 +297,19 @@ public class MegaMan {
         return false;
     }
 
+    /**
+     * Get the current shooting height, to know where to draw the bullet
+     * @return the current shooting height, to know where to draw the bullet
+     */
     public float getShootingHeight() {
         return shootingHeight;
     }
 
+    /**
+     * Set the actual shooting height, depend on the current state
+     * because different textures modify the height of the bullet
+     * @param jumpState
+     */
     public void setShootingHeight(JumpState jumpState) {
         if (isJumpState(JumpState.CLIMBING) || isJumpState(JumpState.FALLING) || isJumpState(JumpState.JUMPING)){
             shootingHeight = MEGAMAN_OTHER_SHOOTING_HEIGHT;
@@ -305,10 +330,17 @@ public class MegaMan {
         return hitBox;
     }
 
+    /**
+     * Set up the bulletlistener interface for this object
+     * @param bulletListener
+     */
     public void setBulletListener(BulletListener bulletListener) {
         this.bulletListener = bulletListener;
     }
 
+    /**
+     * Call the implemented bulletlistener's createBullet() method
+     */
     private void shoot(){
         if (bulletListener != null){
             bulletListener.createBullet();
@@ -316,7 +348,7 @@ public class MegaMan {
     }
 
     /**
-     * Update the hitbox position
+     * Update the hitbox's position
      */
     private void updateHitBox() {
         hitBox.setPosition(position.x, position.y);

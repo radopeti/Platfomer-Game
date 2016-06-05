@@ -11,6 +11,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -54,8 +55,6 @@ public class Level implements Disposable, BulletListener {
         platforms = new Array<Platform>();
         ladders = new Array<Ladder>();
         megaManBullets = new Array<Bullet>();
-        megaMan = new MegaMan(20, 20);
-        megaMan.setBulletListener(this);
         this.viewport = viewport;
         this.camera = camera;
         updateCurrentView();
@@ -67,6 +66,10 @@ public class Level implements Disposable, BulletListener {
         createPlatforms(MapObjectLoader.getPlatformColliders(tiledMap));
         mapWidth = MapUtils.getMapWidth(tiledMap);
         mapHeight = MapUtils.getMapHeight(tiledMap);
+        Vector2 startPosition = MapUtils.getStartPosition(tiledMap);
+
+        megaMan = new MegaMan(startPosition);
+        megaMan.setBulletListener(this);
     }
 
     public void update(float delta) {

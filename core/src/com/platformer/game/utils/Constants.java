@@ -2,6 +2,8 @@ package com.platformer.game.utils;
 
 import com.badlogic.gdx.graphics.Color;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 /**
  * Created by radopeti on 2016. 05. 17..
  * Game constants
@@ -28,6 +30,10 @@ public class Constants {
     public static final float MEGAMAN_DEF_SHOOTING_HEIGHT = 10;
     public static final float MEGAMAN_OTHER_SHOOTING_HEIGHT = 16;
     public static final float MEGAMAN_SHOOTING_DELAY = 0.3f;
+    public static final float MEGAMAN_CLIMBING_WIDTH_CORRECTION = Assets.instance.megaManAssets.climbingWidthCorrection;
+    public static final float MEGAMAN_STANDING_WIDTH_CORRECTION = Assets.instance.megaManAssets.standShootWidthCorrection;
+    public static final float MEGAMAN_FALL_WIDTH_CORRECTION = Assets.instance.megaManAssets.fallShootWidthCorrection;
+    public static final float MEGAMAN_JUMP_WIDTH_CORRECTION = Assets.instance.megaManAssets.jumpShootWidthCorrection;
 
     public static final float LADDER_INTERSECTION_MIN_WIDTH = 12;
 }
