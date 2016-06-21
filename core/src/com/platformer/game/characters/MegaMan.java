@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.platformer.game.listeners.BulletListener;
+import com.platformer.game.listeners.MobileControlListener;
 import com.platformer.game.mapcomponents.Ladder;
 import com.platformer.game.mapcomponents.Platform;
 import com.platformer.game.utils.Assets;
@@ -28,7 +29,7 @@ import static com.platformer.game.utils.Constants.*;
  * enemies by shooting on them.
  */
 
-public class MegaMan {
+public class MegaMan{
 
     private static final String TAG = MegaMan.class.getName();
 
@@ -57,7 +58,7 @@ public class MegaMan {
     private float shootingHeight;
 
     private BulletListener bulletListener;
-
+    private MobileControlListener mobileControlListener;
     /**
      * Default constructor
      */
@@ -105,14 +106,15 @@ public class MegaMan {
         }
 
         //move key controls
-        if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
+        if (Gdx.input.isKeyPressed(Keys.RIGHT) || mobileControlListener.isRightButtonPressed()) {
             moveRight(delta);
-        } else if (Gdx.input.isKeyPressed(Keys.LEFT)) {
+        } else if (Gdx.input.isKeyPressed(Keys.LEFT)  || mobileControlListener.isLeftButtonPressed()) {
             moveLeft(delta);
         } else {
             velocity.x = 0;
             walkingState = WalkingState.STANDING;
         }
+
 
         //jump key control
         if (Gdx.input.isKeyPressed(Keys.X)) {
@@ -366,7 +368,9 @@ public class MegaMan {
         walkingState = WalkingState.RUNNING;
         direction = Direction.LEFT;
         flipX = false;
+
         if (ableToMove) velocity.x = -MEGAMAN_MOVEMENT_SPEED;
+        Gdx.app.log("mm", "able to move: " + ableToMove);
     }
 
     /**
@@ -486,5 +490,9 @@ public class MegaMan {
             velocity.y = climbingSpeed;
             climbOnTop = position.y > ladder.getTop() - hitBox.getHeight() / 2 && position.y < ladder.getTop() - 1;
         }
+    }
+
+    public void setMobileControlListener(MobileControlListener listener){
+        mobileControlListener = listener;
     }
 }

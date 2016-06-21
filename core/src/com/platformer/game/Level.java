@@ -24,6 +24,7 @@ import com.platformer.game.utils.CustomCam;
 import com.platformer.game.utils.Enums;
 import com.platformer.game.utils.MapObjectLoader;
 import com.platformer.game.utils.MapUtils;
+import com.platformer.game.utils.MobileControls;
 
 import java.util.Iterator;
 
@@ -75,7 +76,6 @@ public class Level implements Disposable, BulletListener {
     public void update(float delta) {
         megaMan.update(delta, platforms, ladders);
         updateCurrentView();
-        Gdx.app.log("lvel", "bullet array size: " + megaManBullets.size);
         for (Bullet bullet : megaManBullets){
             bullet.update(delta);
             if (bullet.getPosition().x < currentViewLeft || bullet.getPosition().x > currentViewRight){
@@ -185,5 +185,9 @@ public class Level implements Disposable, BulletListener {
         }
         Bullet bullet = new Bullet(x, y, direction);
         megaManBullets.add(bullet);
+    }
+
+    public void setMobileListener(MobileControls mc){
+        megaMan.setMobileControlListener(mc);
     }
 }
