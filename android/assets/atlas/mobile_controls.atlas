@@ -1,0 +1,27 @@
+
+mobile_controls.png
+size: 256,64
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+circle
+  rotate: false
+  xy: 71, 23
+  size: 39, 39
+  orig: 39, 39
+  offset: 0, 0
+  index: -1
+movement
+  rotate: false
+  xy: 2, 2
+  size: 67, 60
+  orig: 67, 60
+  offset: 0, 0
+  index: -1
+square
+  rotate: false
+  xy: 112, 23
+  size: 39, 39
+  orig: 39, 39
+  offset: 0, 0
+  index: -1

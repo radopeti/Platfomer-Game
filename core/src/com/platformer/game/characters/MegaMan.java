@@ -117,7 +117,7 @@ public class MegaMan{
 
 
         //jump key control
-        if (Gdx.input.isKeyPressed(Keys.X)) {
+        if (Gdx.input.isKeyPressed(Keys.X) || mobileControlListener.isJumpButtonPressed()) {
             jump();
         } else if (lastPosition.y > position.y) {
             if (isJumpState(JumpState.GROUNDED) || isJumpState(JumpState.JUMPING)) {
@@ -126,7 +126,7 @@ public class MegaMan{
         }
 
         //climb key control
-        if (Gdx.input.isKeyPressed(Keys.UP)){
+        if (Gdx.input.isKeyPressed(Keys.UP) || mobileControlListener.isUpButtonPressed()){
             Ladder ladder = getCurrentLadder(ladders);
             if (ladder != null){
                 if (position.y > ladder.getTop() - 10 && position.y < ladder.getTop() - 1) {
@@ -138,7 +138,7 @@ public class MegaMan{
                     climbOnLadder(ladder, MEGAMAN_CLIMBING_SPEED);
                 }
             }
-        }else if(Gdx.input.isKeyPressed(Keys.DOWN)){
+        }else if(Gdx.input.isKeyPressed(Keys.DOWN) || mobileControlListener.isDownButtonPressed()){
             Ladder ladder = getCurrentLadder(ladders);
             if (ladder != null) {
                 if (position.y > ladder.getY()){
@@ -156,7 +156,7 @@ public class MegaMan{
         }
 
         //shoot key
-        if (Gdx.input.isKeyPressed(Keys.C)){
+        if (Gdx.input.isKeyPressed(Keys.C) || mobileControlListener.isFireButtonPressed()){
             shootState = ShootState.SHOOTING;
             if (canShoot){
                 shoot();

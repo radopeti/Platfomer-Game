@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.platformer.game.listeners.MobileControlListener;
+import com.platformer.game.utils.mobilecontrols.MobileControls;
 
 import static com.platformer.game.utils.Constants.*;
 
@@ -22,6 +24,7 @@ public class Assets implements Disposable, AssetErrorListener{
     public static final Assets instance = new Assets();
 
     public MegaManAssets megaManAssets;
+    public MobileControlButtons mobileControlButtons;
 
     private AssetManager assetManager;
     
@@ -34,6 +37,14 @@ public class Assets implements Disposable, AssetErrorListener{
         assetManager.finishLoading();
         TextureAtlas megaManAtlas = assetManager.get(MEGAMAN_ATLAS);
         megaManAssets = new MegaManAssets(megaManAtlas);
+    }
+
+    public void initMobileControlButtons(AssetManager assetManager){
+        this.assetManager = assetManager;
+        assetManager.load(MOBILE_CONTROL_ATLAS, TextureAtlas.class);
+        assetManager.finishLoading();
+        TextureAtlas mobileControlAtlas = assetManager.get(MOBILE_CONTROL_ATLAS);
+        mobileControlButtons = new MobileControlButtons(mobileControlAtlas);
     }
 
     @Override
@@ -122,6 +133,20 @@ public class Assets implements Disposable, AssetErrorListener{
             climbAndShootFrames.add(atlas.findRegion("climb-shoot-0"));
             climbAndShootFrames.add(atlas.findRegion("climb-shoot-1"));
             climbAndShootAnimation = new Animation(MEGAMAN_CLIMBING_ANIMATION_FRAME_TIME, climbAndShootFrames, Animation.PlayMode.LOOP);
+        }
+    }
+
+    public class MobileControlButtons{
+        public final TextureRegion movement;
+        public final TextureRegion circle;
+        public final TextureRegion square;
+
+
+        public MobileControlButtons(TextureAtlas atlas){
+            movement = atlas.findRegion("movement");
+            circle = atlas.findRegion("circle");
+            square = atlas.findRegion("square");
+
         }
     }
 }

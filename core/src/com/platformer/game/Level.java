@@ -1,7 +1,5 @@
 package com.platformer.game;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -18,13 +16,13 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.platformer.game.characters.MegaMan;
 import com.platformer.game.entities.Bullet;
 import com.platformer.game.listeners.BulletListener;
+import com.platformer.game.listeners.MobileControlListener;
 import com.platformer.game.mapcomponents.Ladder;
 import com.platformer.game.mapcomponents.Platform;
-import com.platformer.game.utils.CustomCam;
 import com.platformer.game.utils.Enums;
 import com.platformer.game.utils.MapObjectLoader;
 import com.platformer.game.utils.MapUtils;
-import com.platformer.game.utils.MobileControls;
+import com.platformer.game.utils.mobilecontrols.MobileControls;
 
 import java.util.Iterator;
 
@@ -187,7 +185,7 @@ public class Level implements Disposable, BulletListener {
         megaManBullets.add(bullet);
     }
 
-    public void setMobileListener(MobileControls mc){
+    public void setMobileListener(MobileControlListener mc){
         megaMan.setMobileControlListener(mc);
     }
 }

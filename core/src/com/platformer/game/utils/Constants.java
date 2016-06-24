@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Game constants
  */
 public class Constants {
-    public static final float WORLD_SIZE = 250;
+    public static final float WORLD_SIZE = 200;
     public static final float GRAVITY = 10;
     public static final Color BACKGROUND_COLOR = Color.FOREST;
 
@@ -36,4 +36,18 @@ public class Constants {
     public static final float MEGAMAN_JUMP_WIDTH_CORRECTION = Assets.instance.megaManAssets.jumpShootWidthCorrection;
 
     public static final float LADDER_INTERSECTION_MIN_WIDTH = 12;
+
+    public static final String MOBILE_CONTROL_ATLAS = "atlas/mobile_controls.atlas";
+    public static final int MOVEMENT_BUTTON_WIDTH = 20;
+    public static final int MOVEMENT_BUTTON_HEIGHT = 20;
+    public static final int MOVEMENT_BUTTON_OFFSET = 3;
+    public static final int BUTTON_SCALE = 1;
+
+    //jump button constants
+    public static final float JB_HORIZONTAL_OFFSET = 90;
+    public static final float JB_VERTICAL_OFFSET = 5;
+
+    //jump button constants
+    public static final float FB_HORIZONTAL_OFFSET = 45;
+    public static final float FB_VERTICAL_OFFSET = 15;
 }
