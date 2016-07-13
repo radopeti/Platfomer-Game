@@ -22,20 +22,23 @@ import static com.platformer.game.utils.Constants.*;
 
 public class GameScreen extends ScreenAdapter{
 
-    //render the textures
+    //to render the textures in the game world
     private SpriteBatch batch;
-    private SpriteBatch mobileControlBatch;
+    //to render the gui
+    private SpriteBatch guiBatch;
     //for debug rendering
     private ShapeRenderer renderer;
-    private ShapeRenderer mobileControlRenderer;
-    //Camera object
+    private ShapeRenderer guiRenderer;
+    //Camera objects
+    //camera if for the game world
     private OrthographicCamera camera;
+    //guiCam is for gui
     private OrthographicCamera guiCam;
     //Viewport
     private Viewport viewport;
-
+    //Level clas
     private Level level;
-
+    //mobile controls
     private MobileControls mc;
     private boolean isMobile = false;
 
@@ -52,21 +55,24 @@ public class GameScreen extends ScreenAdapter{
         Assets.instance.init(am);
         Assets.instance.initMobileControlButtons(am);
         level = new Level(camera, viewport, batch);
-        level.setDebugOn(true);
+        level.setDebugOn(false);
 
         //if app runs on android, we add the mobile controls
         if (Gdx.app.getType().equals(Android)){
             isMobile = true;
-            mobileControlRenderer = new ShapeRenderer();
-            mobileControlBatch = new SpriteBatch();
+            guiRenderer = new ShapeRenderer();
+            guiBatch = new SpriteBatch();
             guiCam = new OrthographicCamera(WORLD_SIZE, WORLD_SIZE);
             guiCam.position.set(camera.viewportWidth / 2, camera.viewportHeight / 2, 0);
             guiCam.update();
             mc = new MobileControls(guiCam);
             level.setMobileListener(mc);
         }else{
+            //set a empty MobileControlListener on to avoid NullPointerException
+            //if the game runs on Desktop or WebGL
             level.setMobileListener(new EmptyControls());
         }
+
     }
 
     @Override
@@ -88,17 +94,16 @@ public class GameScreen extends ScreenAdapter{
         level.renderMap();
 
         if (isMobile){
-            mobileControlRenderer.setProjectionMatrix(guiCam.combined);
-            mobileControlBatch.setProjectionMatrix(guiCam.combined);
-            mobileControlBatch.begin();
-                mc.render(mobileControlBatch);
-            mobileControlBatch.end();
+            guiRenderer.setProjectionMatrix(guiCam.combined);
+            guiBatch.setProjectionMatrix(guiCam.combined);
+            guiBatch.begin();
+                mc.render(guiBatch);
+            guiBatch.end();
 
-            mobileControlRenderer.begin(ShapeRenderer.ShapeType.Line);
-                mc.debugRender(mobileControlRenderer);
-            mobileControlRenderer.end();
+            /*guiRenderer.begin(ShapeRenderer.ShapeType.Line);
+                mc.debugRender(guiRenderer);
+            guiRenderer.end();*/
         }
-
 
         renderer.begin(ShapeRenderer.ShapeType.Line);
             level.debugRender(renderer);
@@ -107,6 +112,7 @@ public class GameScreen extends ScreenAdapter{
         batch.begin();
             level.render(batch);
         batch.end();
+
     }
 
     @Override
@@ -116,8 +122,8 @@ public class GameScreen extends ScreenAdapter{
         level.dispose();
 
         if (isMobile){
-            mobileControlRenderer.dispose();
-            mobileControlBatch.dispose();
+            guiRenderer.dispose();
+            guiBatch.dispose();
         }
     }
 }

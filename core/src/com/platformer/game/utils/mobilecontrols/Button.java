@@ -4,11 +4,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.platformer.game.utils.Assets;
 import static com.platformer.game.utils.Constants.*;
 
 /**
- * Created by hátén on 2016. 06. 24..
+ * Created by Peter Rado on 2016. 06. 24..
+ * Present a button object.
  */
 
 public class Button {
@@ -43,6 +43,12 @@ public class Button {
         renderer.rect(position.x, position.y, width, height);
     }
 
+    /**
+     * This functions sets the center position of the buttons with texture, like circle
+     * and square buttons. We call it after the object is created, else we run into
+     * NullPointerException, because we calculate the width and height from the textureRegion's
+     * properties.
+     */
     public void setCenter(){
         width = textureRegion.getRegionWidth();
         height = textureRegion.getRegionHeight();
@@ -51,16 +57,17 @@ public class Button {
         this.center = new Vector2(centerX, centerY);
     }
 
+    /**
+     * It the parameter is true, it means this function is for the
+     * Buttons without texture and fixed width and height
+     * @param notNull if true we set
+     */
     public void setCenter(boolean notNull){
         if (notNull){
             float centerX = position.x + width / 2;
             float centerY = position.y + height / 2;
             this.center = new Vector2(centerX, centerY);
         }
-    }
-
-    public Vector2 getCenter(){
-        return center;
     }
 
     public Vector2 getPosition() { return position; }
@@ -73,6 +80,11 @@ public class Button {
         this.position.set(x, y);
     }
 
+    /**
+     * Check if a button is touched or not.
+     * @param touchCoords unprojected coordinates of a screen touch
+     * @return true if the touch's coordinates are inside the button
+     */
     public boolean isPressed(Vector2 touchCoords){
         return touchCoords.dst(center) < width / 2;
     }

@@ -24,12 +24,15 @@ import static com.platformer.game.utils.Constants.JB_VERTICAL_OFFSET;
 import static com.platformer.game.utils.Constants.WORLD_SIZE;
 
 /**
- * Created by hátén on 2016. 06. 21..
+ * Created by Peter Rado on 2016. 06. 21..
+ * This class represents the mobile controls. It renders the buttons and also polling the input
+ * from the screen. It implements the MobileControlListener class to call appropriate functions
+ * if a button is pressed.
+ * It has a separate viewport and camera, to fix the position of the buttons.
  */
 public class MobileControls implements MobileControlListener{
 
     private Viewport viewport;
-    private Array<Rectangle> testButtons;
     private Array<Button> buttons;
     private MovementButton movement;
     private Button jump;
@@ -83,31 +86,43 @@ public class MobileControls implements MobileControlListener{
 
     @Override
     public boolean isLeftButtonPressed() {
+        if (isFireOrJumpPressed()) return isButtonPressed(movement.left, 1);
         return isButtonPressed(movement.left, 0);
     }
 
     @Override
     public boolean isRightButtonPressed() {
+        if (isFireOrJumpPressed()) return isButtonPressed(movement.right, 1);
         return isButtonPressed(movement.right, 0);
     }
 
     @Override
     public boolean isDownButtonPressed() {
+        if (isFireOrJumpPressed()) return isButtonPressed(movement.down, 1);
         return isButtonPressed(movement.down, 0);
     }
 
     @Override
     public boolean isUpButtonPressed() {
+        if (isFireOrJumpPressed()) return isButtonPressed(movement.up, 1);
         return isButtonPressed(movement.up, 0);
     }
 
     @Override
     public boolean isJumpButtonPressed() {
+        if (isButtonPressed(movement.left, 0) || isButtonPressed(movement.right, 0))
+            return isButtonPressed(jump, 1);
+        else if (isButtonPressed(movement.up, 0) || isButtonPressed(movement.down, 0))
+            return isButtonPressed(jump, 1);
         return isButtonPressed(jump, 0);
     }
 
     @Override
     public boolean isFireButtonPressed() {
+        if (isButtonPressed(movement.left, 0) || isButtonPressed(movement.right, 0))
+            return isButtonPressed(fire, 1);
+        else if (isButtonPressed(movement.up, 0) || isButtonPressed(movement.down, 0))
+            return isButtonPressed(fire, 1);
         return isButtonPressed(fire, 0);
     }
 
@@ -120,5 +135,10 @@ public class MobileControls implements MobileControlListener{
             if (button.isPressed(coords))
                 return true;
         return false;
+    }
+
+    //helper method to avoid code duplication
+    private boolean isFireOrJumpPressed(){
+        return isButtonPressed(jump, 0) || isButtonPressed(fire, 0);
     }
 }

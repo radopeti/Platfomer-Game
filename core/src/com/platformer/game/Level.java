@@ -74,6 +74,7 @@ public class Level implements Disposable, BulletListener {
     public void update(float delta) {
         megaMan.update(delta, platforms, ladders);
         updateCurrentView();
+        //inactivate the bullets which left the screen
         for (Bullet bullet : megaManBullets){
             bullet.update(delta);
             if (bullet.getPosition().x < currentViewLeft || bullet.getPosition().x > currentViewRight){
@@ -115,6 +116,7 @@ public class Level implements Disposable, BulletListener {
         this.debugOn = debugOn;
     }
 
+    //for the first collision tests
     public void initTestPlatforms() {
         platforms.add(new Platform(10, 60, 20, 150));
         platforms.add(new Platform(40, 10, 150, 15));
@@ -127,6 +129,7 @@ public class Level implements Disposable, BulletListener {
 
     }
 
+    //creates the platform objects
     public void createPlatforms(Array<Rectangle> rectangles) {
         for (Rectangle rectangle : rectangles){
             Platform platform = new Platform(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
@@ -134,6 +137,7 @@ public class Level implements Disposable, BulletListener {
         }
     }
 
+    //creates the ladder objects
     public void createLadders(Array<Rectangle> rectangles) {
         for (Rectangle rectangle : rectangles){
             Ladder ladder = new Ladder(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
@@ -146,6 +150,7 @@ public class Level implements Disposable, BulletListener {
         tiledMap.dispose();
     }
 
+    //updates the camera to follow MegaMan
     private void updateCamera(){
         if (megaMan.getPosition().x - viewport.getWorldWidth() / 2 > 0 && megaMan.getPosition().x + viewport.getWorldWidth() / 2 < mapWidth){
             camera.position.x = megaMan.getPosition().x;
@@ -155,6 +160,7 @@ public class Level implements Disposable, BulletListener {
         }
     }
 
+    //removes inactive bullet objects
     private void removeInactiveBullets(){
         Iterator<Bullet> it = megaManBullets.iterator();
         while (it.hasNext()){
@@ -163,11 +169,15 @@ public class Level implements Disposable, BulletListener {
         }
     }
 
+    //helper method, calculates the left and the right edge if the screen
     private void updateCurrentView(){
         currentViewLeft = camera.position.x - viewport.getWorldWidth() / 2;
         currentViewRight = camera.position.x + viewport.getWorldWidth() / 2;
     }
 
+    /**
+     * Create a bullet on MegaMan's weapon and start it to the appropriate direction
+     */
     @Override
     public void createBullet() {
         float x = 0;
@@ -185,6 +195,10 @@ public class Level implements Disposable, BulletListener {
         megaManBullets.add(bullet);
     }
 
+    /**
+     * Set a mobilecontrol listener on MegaMan
+     * @param mc MobileControlListener object like MobileControls
+     */
     public void setMobileListener(MobileControlListener mc){
         megaMan.setMobileControlListener(mc);
     }

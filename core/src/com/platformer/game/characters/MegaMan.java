@@ -59,6 +59,7 @@ public class MegaMan{
 
     private BulletListener bulletListener;
     private MobileControlListener mobileControlListener;
+
     /**
      * Default constructor
      */
@@ -492,6 +493,10 @@ public class MegaMan{
         }
     }
 
+    /**
+     * Set a MobileControlListener on
+     * @param listener MobileControlListener
+     */
     public void setMobileControlListener(MobileControlListener listener){
         mobileControlListener = listener;
     }

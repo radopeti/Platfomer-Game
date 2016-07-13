@@ -3,7 +3,9 @@ package com.platformer.game.utils;
 import com.platformer.game.listeners.MobileControlListener;
 
 /**
- * Created by hátén on 2016. 06. 24..
+ * Created by Peter Rado on 2016. 06. 24..
+ * This is a empty MobileControlListener object to help avoid NullPointerException
+ * when the game runs on Desktop or WebGL
  */
 public class EmptyControls implements MobileControlListener {
     @Override
