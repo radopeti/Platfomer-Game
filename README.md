@@ -4,7 +4,7 @@ Latest desktop build: https://goo.gl/cfc7gh
 
 Android apk: https://goo.gl/lzfVV5
 
-Controls:
+### Controls:
 
 Desktop:
 - Move left: left key
