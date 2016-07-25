@@ -1,13 +1,16 @@
 package com.platformer.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -49,6 +52,8 @@ public class Level implements Disposable, BulletListener {
     private int mapWidth;
     private int mapHeight;
 
+    ParticleEffect pe = new ParticleEffect();
+
     public Level(OrthographicCamera camera, Viewport viewport, SpriteBatch batch) {
         debugOn = false;
         platforms = new Array<Platform>();
@@ -69,6 +74,8 @@ public class Level implements Disposable, BulletListener {
 
         megaMan = new MegaMan(startPosition);
         megaMan.setBulletListener(this);
+
+        pe.load(Gdx.files.internal("vfx/sparkling-explosion"), Gdx.files.internal("vfx"));
     }
 
     public void update(float delta) {
@@ -81,6 +88,18 @@ public class Level implements Disposable, BulletListener {
                 bullet.setActive(false);
             }
         }
+
+        for (Bullet bullet : megaManBullets){
+            for (Ladder ladder : ladders){
+                if (Intersector.overlaps(bullet.getCollisionCircle(), ladder.getRectangle())){
+                    bullet.setActive(false);
+                    pe.setPosition(bullet.getPosition().x, bullet.getPosition().y);
+                    pe.start();
+                }
+            }
+        }
+
+        pe.update(delta);
         removeInactiveBullets();
         updateCamera();
     }
@@ -94,6 +113,8 @@ public class Level implements Disposable, BulletListener {
         for (Bullet bullet : megaManBullets){
             bullet.render(batch);
         }
+
+        pe.draw(batch);
     }
 
     public void debugRender(ShapeRenderer renderer) {
